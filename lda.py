@@ -45,7 +45,6 @@ y_pred = classifier.predict(X_test)
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
 acc = classifier.score(X_test, y_test)
-# print(acc)
 with open("metrics_lda.txt", "w") as outfile:
     outfile.write("Accuracy: " + str(acc) + "\n")
 # print(accuracy_score(y_test, y_pred))
