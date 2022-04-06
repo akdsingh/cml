@@ -1,0 +1,36 @@
+name: Model Selection
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: iterative/setup-cml@v1
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+          python kernel_pca.py
+          python pca.py
+          python lda.py
+
+          echo "Model Metrics"
+          cat metrics_kernel_pca.txt >> report.md
+          cat metrics_pca.txt >> report.md
+          cat metrics_lda.txt >> report.md
+          
+          echo "Kernel Pca"
+          cml-publish kernel_pca_test.png --md >> report.md
+          cml-publish kernel_pca_train.png --md >> report.md
+          
+          echo "PCA"
+          cml-publish pca-test.png --md >> report.md
+          cml-publish pca-train.png --md >> report.md
+          
+          echo "LDA"
+          cml-publish lda-test.png --md >> report.md
+          cml-publish lda-train.png --md >> report.md
+          
+          cml-send-comment report.md
